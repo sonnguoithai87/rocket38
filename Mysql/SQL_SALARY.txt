@@ -1,10 +1,9 @@
 create database salary;
 use salary;
-
 create table departments 
 (
 Id int primary key,
-DepartmentName varchar(20),
+DepartmentName varchar(100),
 Description text,
 CreatedDate datetime ,
 UpdatedDate datetime
@@ -13,7 +12,7 @@ UpdatedDate datetime
 create table roles 
 (
 Id int primary key,
-Name varchar (30),
+Name varchar (50),
 CreatedDate datetime,
 UpdatedDate datetime
 );
@@ -24,15 +23,6 @@ Id int primary key,
 Name varchar(50),
 CreatedDate datetime,
 UpdatedDate datetime 
-);
-create table salary_detail
-(
-Id int primary key,
-SalaryId double(12,2),
-SalaryDetailTypeId int,
-operation tinyint(3),
-foreign key (SalaryId) references salary(Id),
-foreign key (SalaryDetailTypeId) references salary_detail_type(Id)
 );
 
 create table users
@@ -51,6 +41,33 @@ CreateDate datetime,
 UpdateDate datetime 
 );
 
+create table User_Department
+( 
+Id int primary key,
+UserId int,
+DepartmentId int,
+StartDate date ,
+EndDate date ,
+CreateDate datetime,
+UpdateDate datetime,
+constraint FK_User foreign key (UserId) references users(Id),
+constraint FK_De foreign key (DepartmentId) references departments(Id)
+);
+
+create table User_Role 
+(
+Id int primary key,
+UserDpId int,
+RoleId int,
+StartDate date,
+EndDate date ,
+ CreateDate datetime,
+UpdateDate  datetime,
+foreign key (UserDpId) references User_Department(Id),
+foreign key(RoleId) references  roles(Id)
+);
+
+
 create table salary
 (
 ID int primary key,
@@ -63,37 +80,17 @@ UpdateDate datetime,
 foreign key (UserRoleId) references User_Role(Id)
 );
 
-create table User_Department
-( 
-Id int primary key,
-UserId int,
-DepartmentId int,
-StartDate date ,
-EndDate date ,
-CreateDate datetime,
-UpdateDate datetime,
-constraint FK_User foreign key (UserId) references users(Id),
-constraint FK_De foreign key (DepartmentId) references departments(Id);
-);
-
-
-alter table User_Depart
--- us ở đây là id của bảng department !!!
-add constraint FK_User foreign key (usID) references users(usID),
-add constraint FK_De foreign key (deID) references departments(deID);
-
-create table User_Role 
+create table salary_detail
 (
-urID int primary key,
-usID int,
-roID int,
-start_date date,
-end_date date ,
-create_at datetime,
-update_at datetime,
-foreign key (usID) references User_Depart(usID),
-foreign key(roID) references  roles(roID)
+Id int primary key,
+SalaryId int,
+SalaryDetailTypeId int,
+operation tinyint(3),
+foreign key (SalaryId) references salary(Id),
+foreign key (SalaryDetailTypeId) references salary_detail_type(Id)
 );
+
+
 
 -- Chèn dữ liệu vào bảng salary_detail_type
 INSERT INTO salary_detail_type (satpID, satpName, cre, updated)
